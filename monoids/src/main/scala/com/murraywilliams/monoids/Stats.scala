@@ -19,15 +19,21 @@ object Stats {
     else
       Double.NaN 
     lazy val sdev: Double = Math.sqrt(variance)
+
+    def normalize(x: Double): Double = (x - mean) / sdev
+    def denormalize(x: Double): Double = (x * sdev) + mean
   }
 
-  val statsAggregatorMonoid = new Monoid[StatsAggregator] {
+  import cats.implicits._
+  val statsAggregatorMonoid = implicitly(Monoid[StatsAggregator])
 
-    override def combine(x: StatsAggregator, y: StatsAggregator): StatsAggregator =
-      (x._1 + y._1, x._2 + y._2, x._3 + y._3)
-
-    override def empty: StatsAggregator = (0.0, 0.0, 0L)
-
+  implicit class SeqNormalization(data: Seq[Double]) {
+    lazy val stats: StatsAggregator = data.map(toStats(_)).foldLeft(statsAggregatorMonoid.empty)(statsAggregatorMonoid.combine)
+    lazy val mean = stats.mean
+    lazy val sdev = stats.sdev
+    lazy val normalize = data.map(stats.normalize)
   }
+
+  implicit class ArrayNormalization(data: Array[Double]) extends SeqNormalization(data.toIndexedSeq)
 
 }
