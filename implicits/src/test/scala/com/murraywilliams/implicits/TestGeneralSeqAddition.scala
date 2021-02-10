@@ -13,6 +13,7 @@ class TestGeneralSeqAddition extends FunSuite with Matchers {
     List(2.3, 3.4) + List(-2.3, -3.4) shouldBe List(0.0, 0.0)
     Vector(13L, 0L) + Vector(1L, 1L) shouldBe Vector(14L, 1L)
 
+    
   }
 
 }
