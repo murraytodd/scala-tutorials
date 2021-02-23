@@ -1,6 +1,6 @@
 package com.murraywilliams.intro.thirdpass
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 case class Contact(id: Int, name: String, phone: Option[String], email: Option[String], friendIds: List[Int]) {
   import Contact._
